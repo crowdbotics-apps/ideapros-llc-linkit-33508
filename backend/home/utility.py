@@ -6,6 +6,28 @@ import pyotp
 from ideapros_llc_linkit_33508.settings import SENDGRID_EMAIL
 
 
+def send_password_reset_email(user):
+    email = user.email
+    token, created = Token.objects.get_or_create(user=user)
+    link = "https://ideapros-llc-linkit-33508.botics.co/reset-password?token={}".format(token)
+    email_body = """\
+            <html>
+            <head></head>
+            <body>
+            <p>
+            Hi,<br>
+            Please visit the following link to reset your password <br><br>
+            <a href="%s">%s</a><br>
+            Regards,<br>
+            Team Linkitch
+            </p>
+            </body>
+            </html>
+            """ % (link, link)
+    email_msg = EmailMessage("Password Reset - Linkitch", email_body, from_email=SENDGRID_EMAIL, to=[email])
+    email_msg.content_subtype = "html"
+    email_msg.send()
+
 def send_otp(user):
     email = user.email
     secret = pyotp.random_base32()

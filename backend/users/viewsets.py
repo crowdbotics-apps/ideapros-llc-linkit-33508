@@ -12,7 +12,7 @@ from users.models import User
 from users.authentication import ExpiringTokenAuthentication
 from home.permissions import IsPostOrIsAuthenticated
 
-from home.utility import auth_token, send_otp
+from home.utility import auth_token, send_otp, send_password_reset_email
 from users.serializers import ChangePasswordSerializer, CustomAuthTokenSerializer, OTPSerializer, UserSerializer
 
 
@@ -43,6 +43,18 @@ class UserViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Send a Password Reset Link
+    @action(detail=False, methods=['post'])
+    def password_reset_link(self, request):
+        try:
+            email = request.data.get('email')
+            user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return Response({"detail": "Invalid Email - Does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        send_password_reset_email(user)
+        return Response(status=status.HTTP_200_OK)
 
     # Send a OTP
     @action(detail=False, methods=['post'])
