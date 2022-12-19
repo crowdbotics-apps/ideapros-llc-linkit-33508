@@ -7,6 +7,8 @@ import GettingStarted from "../screens/GettingStarted"
 import AuthLoading from "../screens/AuthLoading"
 import Welcome from "../screens/Splash/Welcome"
 import Home from "../screens/Home"
+import TermsCondtions from "../screens/TCPP/TermsCondtions"
+import PrivacyPolicy from "../screens/TCPP/PrivacyPolicy"
 
 const Stack = createStackNavigator()
 function MainStackNav() {
@@ -23,6 +25,8 @@ function MainStackNav() {
       <Stack.Screen name="AuthLoading" component={AuthLoading} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="TermsCondtions" component={TermsCondtions} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
       <Stack.Screen name="Drawers" component={Home} />
     </Stack.Navigator>
   )

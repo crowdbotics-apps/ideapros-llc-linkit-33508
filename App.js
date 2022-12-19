@@ -5,14 +5,33 @@ import AppContext from "./store/Context"
 import { NavigationContainer } from "@react-navigation/native"
 import { MenuProvider } from "react-native-popup-menu"
 import { SafeAreaView } from "react-native"
+import { getPrivacyPolicy, getTerms } from "./api/auth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 function App() {
   const [user, setUser] = useState(null)
+  const [terms, setTerms] = useState([])
+  const [privacyPolicy, setPrivacyPolicy] = useState([])
+
+  const _getTerms = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token")
+      const res = await getTerms(token)
+      const res1 = await getPrivacyPolicy(token)
+      setPrivacyPolicy(res1?.data)
+      setTerms(res?.data)
+    } catch (error) {
+      getError(error)
+    }
+  }
 
   return (
     <AppContext.Provider
       value={{
         user,
-        setUser
+        setUser,
+        _getTerms,
+        privacyPolicy,
+        terms
       }}
     >
       <NavigationContainer>

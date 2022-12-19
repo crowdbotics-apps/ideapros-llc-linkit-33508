@@ -51,7 +51,7 @@ function ForgotPassword({ navigation }) {
       console.warn("res?.data", res?.data)
       handleChange("loading", false)
       Toast.show(`Email has been sent to ${email}`, Toast.SHORT)
-      // navigation.goBack()
+      navigation.goBack()
     } catch (error) {
       handleChange("loading", false)
       const errorText = Object.values(error?.response?.data)

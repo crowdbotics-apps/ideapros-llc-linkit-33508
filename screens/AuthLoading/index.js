@@ -7,7 +7,7 @@ import AppContext from "../../store/Context"
 function AuthLoading({ navigation }) {
   // Context
   const context = useContext(AppContext)
-  const { setUser } = context
+  const { setUser, _getTerms } = context
 
   useEffect(() => {
     _bootstrapAsync()
@@ -16,6 +16,7 @@ function AuthLoading({ navigation }) {
     })
   }, [])
   const _bootstrapAsync = async () => {
+    _getTerms()
     const userUID = await AsyncStorage.getItem("token")
     const user = await AsyncStorage.getItem("user")
     if (userUID && user) {

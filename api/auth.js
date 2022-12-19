@@ -44,3 +44,12 @@ export const forgotpassword = payload => {
 export const getProfile = (id, token) => {
   return API.get(`api/v1/users/${id}/`, token)
 }
+
+export const getTerms = token => {
+  return API.get('api/v1/terms-and-conditions/', token)
+}
+
+export const getPrivacyPolicy = token => {
+  return API.get('api/v1/privacy-policy/', token)
+}
+

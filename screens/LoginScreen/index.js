@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   TextInput
 } from "react-native"
@@ -35,7 +34,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { appleAuth } from "@invertase/react-native-apple-authentication"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { API_URL } from "../../api/config"
-import { validateEmail, validateName } from "../../utils/ValidateEmail"
+import {
+  getError,
+  validateEmail,
+  validateName
+} from "../../utils/ValidateEmail"
 
 function LoginScreen({ navigation, route }) {
   const isType = route?.params?.isType
@@ -67,12 +70,9 @@ function LoginScreen({ navigation, route }) {
   const {
     loading,
     showPassword,
-    confirm_password,
-    phone,
     password,
     active,
     invalidPass,
-    showConfirmPassword,
     name,
     isChecked,
     email
@@ -91,8 +91,8 @@ function LoginScreen({ navigation, route }) {
       }
       const res = await loginUser(payload)
       handleChange("loading", false)
-      setUser(res?.data?.user)
       console.warn("loginUser", res?.data)
+      setUser(res?.data?.user)
       await AsyncStorage.setItem("token", res?.data?.token)
       await AsyncStorage.setItem("user", JSON.stringify(res?.data?.user))
       navigation.navigate("AuthLoading")
@@ -100,8 +100,7 @@ function LoginScreen({ navigation, route }) {
     } catch (error) {
       handleChange("loading", false)
       console.warn("err", error)
-      const errorText = Object.values(error?.response?.data)
-      Toast.show(`Error: ${errorText[0]}`)
+      getError(error)
     }
   }
 
@@ -163,12 +162,11 @@ function LoginScreen({ navigation, route }) {
       await AsyncStorage.setItem("token", res?.data?.token)
       await AsyncStorage.setItem("user", JSON.stringify(res?.data?.user))
       navigation.navigate("AuthLoading")
-      requestUserPermission(true)
+      // requestUserPermission(true)
       Toast.show("Signed up Successfully!", Toast.SHORT)
     } catch (error) {
       handleChange("loading", false)
-      const errorText = Object.values(error?.response?.data)
-      Toast.show(`Error: ${errorText[0]}`)
+      getError(error)
     }
   }
 
@@ -222,7 +220,7 @@ function LoginScreen({ navigation, route }) {
           if (res?.user) {
             handleChange("loading", false)
             setUser(res?.user)
-            requestUserPermission(true)
+            // requestUserPermission(true)
             await AsyncStorage.setItem("token", res?.token)
             await AsyncStorage.setItem("user", JSON.stringify(res?.user))
             navigation.navigate("AuthLoading")
@@ -236,12 +234,12 @@ function LoginScreen({ navigation, route }) {
         .catch(error => {
           handleChange("loading", false)
           console.warn("errcaaaaa", error)
-          Toast.show(`Error: ${error.message}`)
+          getError(error)
         })
         .catch(error => {
           handleChange("loading", false)
           console.warn("errss", error)
-          Toast.show(`Error: ${error.message}`)
+          getError(error)
         })
     }
   }
@@ -280,7 +278,7 @@ function LoginScreen({ navigation, route }) {
         if (res?.user) {
           handleChange("loading", false)
           setUser(res?.user)
-          requestUserPermission(true)
+          // requestUserPermission(true)
           await AsyncStorage.setItem("token", res?.token)
           await AsyncStorage.setItem("user", JSON.stringify(res?.user))
           navigation.navigate("AuthLoading")
@@ -293,13 +291,11 @@ function LoginScreen({ navigation, route }) {
       })
       .catch(error => {
         handleChange("loading", false)
-        console.warn("err", error)
-        Toast.show(`Error: ${error.message}`)
+        getError(error)
       })
       .catch(error => {
         handleChange("loading", false)
-        console.warn("errss", error)
-        Toast.show(`Error: ${error.message}`)
+        getError(error)
       })
   }
 
@@ -360,16 +356,14 @@ function LoginScreen({ navigation, route }) {
             <Text style={styles.label}>Email</Text>
             <View style={styles.textInputContainer}>
               <TextInput
-                onSubmitEditing={() =>
-                  passwordRef.current && passwordRef.current?.focus()
-                }
+                onSubmitEditing={() => passwordRef?.current?.focus()}
                 placeholder={"Email"}
                 returnKeyType="go"
                 caretHidden={false}
                 keyboardType={"email-address"}
                 autoFocus={true}
                 value={email}
-                onBlur={_isEmailValid}
+                // onBlur={_isEmailValid}
                 autoCapitalize="none"
                 onChangeText={text => handleChange("email", text)}
                 placeholderTextColor={COLORS.navy}
@@ -535,11 +529,17 @@ function LoginScreen({ navigation, route }) {
                 }}
               >
                 I have read{" "}
-                <Text style={{ textDecorationLine: "underline" }}>
+                <Text
+                  onPress={() => navigation.navigate("TermsCondtions")}
+                  style={{ textDecorationLine: "underline" }}
+                >
                   Terms and conditions
                 </Text>{" "}
                 and
-                <Text style={{ textDecorationLine: "underline" }}>
+                <Text
+                  onPress={() => navigation.navigate("PrivacyPolicy")}
+                  style={{ textDecorationLine: "underline" }}
+                >
                   {" "}
                   Privacy policy
                 </Text>

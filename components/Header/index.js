@@ -1,19 +1,20 @@
 import React, { useContext } from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Share } from "react-native"
-import { COLORS, FONT1BOLD, FONT1SEMIBOLD } from "../../constants"
+import { COLORS, FONT1BOLD, FONT1MEDIUM, FONT1SEMIBOLD } from "../../constants"
 import { useNavigation } from "@react-navigation/native"
 import { Icon } from "react-native-elements"
 import { heightPercentageToDP as hp } from "react-native-responsive-screen"
 import { SvgXml } from "react-native-svg"
 import AppContext from "../../store/Context"
+import notificationIcon from "../../assets/svg/notification.svg"
+import ChevronLeft from "../../assets/svg/chevron-left.svg"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+
 export default function Header({
   title,
   back,
-  logo,
   rightItem,
   rightEmpty,
-  profile,
   notification,
   backPress,
   backgroundColor,
@@ -32,26 +33,6 @@ export default function Header({
     navigation.navigate("AuthLoading")
   }
 
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message:
-          "React Native | A framework for building native apps using React"
-      })
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message)
-    }
-  }
-
   return (
     <View
       style={[
@@ -67,15 +48,17 @@ export default function Header({
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {back && (
           <TouchableOpacity
+            style={{
+              width: 30,
+              height: 30,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: COLORS.primary,
+              borderRadius: 8
+            }}
             onPress={() => (backPress ? backPress() : navigation.goBack())}
           >
-            <Icon
-              name="left"
-              type="antdesign"
-              color={color || COLORS.darkGrey}
-              size={18}
-              containerStyle={{ marginRight: 5, marginTop: 2 }}
-            />
+            <SvgXml xml={ChevronLeft} />
           </TouchableOpacity>
         )}
         {cross && (
@@ -91,12 +74,26 @@ export default function Header({
             />
           </TouchableOpacity>
         )}
-        {title && (
-          <Text style={[styles.title, { color: color || COLORS.darkGrey }]}>
-            {title}
-          </Text>
-        )}
       </View>
+      {title && (
+        <Text style={[styles.title, { color: color || COLORS.darkBlack }]}>
+          {title}
+        </Text>
+      )}
+      {notification && (
+        <TouchableOpacity
+        // onPress={() => (backPress ? backPress() : navigation.goBack())}
+        >
+          <SvgXml
+            xml={notificationIcon}
+            name="left"
+            type="antdesign"
+            color={color || COLORS.darkGrey}
+            size={18}
+            containerStyle={{ marginRight: 5, marginTop: 2 }}
+          />
+        </TouchableOpacity>
+      )}
       {rightEmpty && <View style={{ width: 50 }} />}
       {rightItem && rightItem}
       {menu && (
@@ -110,19 +107,9 @@ export default function Header({
 
 const styles = StyleSheet.create({
   header: {
-    alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
-    height: hp(9),
-    backgroundColor: COLORS.white,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 3
+    backgroundColor: COLORS.white
   },
   menuView: {
     alignItems: "center",
@@ -131,31 +118,9 @@ const styles = StyleSheet.create({
     height: 45
   },
   title: {
-    color: COLORS.darkGrey,
+    color: COLORS.darkBlack,
     fontSize: hp(2.5),
-    fontFamily: FONT1SEMIBOLD
-  },
-  backText: {
-    color: COLORS.inputBorder,
-    fontFamily: FONT1BOLD
-  },
-  login: {
-    backgroundColor: COLORS.white,
-    width: 90,
-    height: 65,
-    borderTopLeftRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    borderBottomLeftRadius: 100,
-    borderBottomRightRadius: 100
-  },
-  profile: {
-    backgroundColor: COLORS.white,
-    width: 60,
-    height: 65,
-    borderTopLeftRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    borderBottomRightRadius: 50
+    marginTop: 50,
+    fontFamily: FONT1MEDIUM
   }
 })
