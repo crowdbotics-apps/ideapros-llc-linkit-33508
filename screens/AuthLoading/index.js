@@ -21,8 +21,9 @@ function AuthLoading({ navigation }) {
     const user = await AsyncStorage.getItem("user")
     if (userUID && user) {
       const userData = JSON.parse(user)
+      console.warn("userData", userData?.photo)
       setUser(userData)
-      navigation.navigate("Drawers")
+      navigation.navigate(userData?.kitch?.photo ? "Drawers" : "CreateProfile")
     } else {
       navigation.navigate("Welcome")
     }

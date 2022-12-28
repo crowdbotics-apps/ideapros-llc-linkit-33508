@@ -48,7 +48,7 @@ function LoginScreen({ navigation, route }) {
   let password2Ref = useRef()
   // Context
   const context = useContext(AppContext)
-  const { setUser, requestUserPermission } = context
+  const { setUser } = context
 
   const [state, setState] = useState({
     email: "",
@@ -116,21 +116,6 @@ function LoginScreen({ navigation, route }) {
     }
   }
 
-  const _isNameValid = () => {
-    if (onlySpaces(name)) {
-      Toast.show("Please enter name", Toast.LONG)
-      handleChange("name", "")
-      return
-    }
-    if (name) {
-      const isValid = validateName(name)
-      if (!isValid) {
-        handleChange("name", "")
-        Toast.show("Username is not valid!")
-      }
-    }
-  }
-
   useEffect(async () => {
     const email = await AsyncStorage.getItem("email")
     const password = await AsyncStorage.getItem("password")
@@ -161,7 +146,7 @@ function LoginScreen({ navigation, route }) {
       setUser(res?.data?.user)
       await AsyncStorage.setItem("token", res?.data?.token)
       await AsyncStorage.setItem("user", JSON.stringify(res?.data?.user))
-      navigation.navigate("AuthLoading")
+      navigation.navigate("CreateProfile")
       // requestUserPermission(true)
       Toast.show("Signed up Successfully!", Toast.SHORT)
     } catch (error) {

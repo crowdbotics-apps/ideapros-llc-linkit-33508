@@ -34,7 +34,8 @@ export default function AppInput({
   ref,
   returnKeyType,
   marginBottom,
-  alignItems
+  alignItems,
+  fullBorder
 }) {
   const [focused, setFocused] = useState(false)
   const [open, setOpen] = useState(false)
@@ -51,6 +52,7 @@ export default function AppInput({
           {
             marginBottom: marginBottom || 0,
             borderRadius: borderRadius || 0,
+            borderWidth: fullBorder ? 1 : 0,
             borderColor: borderColor || COLORS.borderColor,
             backgroundColor: backgroundColor
               ? backgroundColor
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
     fontSize: hp(1.6)
   },
   lebel: {
-    color: COLORS.navy,
+    color: COLORS.labelColor,
     fontFamily: FONT1REGULAR,
     fontSize: hp(2)
   },

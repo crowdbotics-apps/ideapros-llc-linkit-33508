@@ -1,15 +1,21 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { View, StyleSheet, ScrollView, Text } from "react-native"
 import { heightPercentageToDP as hp } from "react-native-responsive-screen"
 import { COLORS, FONT1REGULAR } from "../../constants"
 import { Header } from "../../components"
 import AppContext from "../../store/Context"
 import { useContext } from "react"
+import { useFocusEffect } from "@react-navigation/native"
 
 function PrivacyPolicy({ navigation }) {
   // Context
   const context = useContext(AppContext)
-  const { privacyPolicy } = context
+  const { privacyPolicy, _getTerms } = context
+  useFocusEffect(
+    useCallback(() => {
+      _getTerms()
+    }, [])
+  )
   return (
     <ScrollView
       style={styles.container}

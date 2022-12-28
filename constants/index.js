@@ -49,6 +49,7 @@ export const COLORS = {
   primary: "#24B767",
   primary04: "rgba(126, 0, 126, 0.4)",
   primaryLight: "#E8F3FA",
+  labelColor: "#2C2B2B",
   backgroud: "#f7f7f7",
   secondary: "rgba(151, 130, 132, 1)",
   stepGreen: "#34C27E",

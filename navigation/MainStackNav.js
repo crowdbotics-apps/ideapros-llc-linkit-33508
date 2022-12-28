@@ -9,6 +9,7 @@ import Welcome from "../screens/Splash/Welcome"
 import Home from "../screens/Home"
 import TermsCondtions from "../screens/TCPP/TermsCondtions"
 import PrivacyPolicy from "../screens/TCPP/PrivacyPolicy"
+import CreateProfile from "../screens/Profile/CreateProfile"
 
 const Stack = createStackNavigator()
 function MainStackNav() {
@@ -27,6 +28,7 @@ function MainStackNav() {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="TermsCondtions" component={TermsCondtions} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="CreateProfile" component={CreateProfile} />
       <Stack.Screen name="Drawers" component={Home} />
     </Stack.Navigator>
   )
