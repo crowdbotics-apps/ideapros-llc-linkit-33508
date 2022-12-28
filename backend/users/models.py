@@ -67,6 +67,10 @@ class Kitch(UUIDModel):
     dropoff = models.BooleanField(
         default=False
     )
+    availability = models.DateTimeField(
+        blank=True,
+        null=True
+    )
     about_us = models.TextField(
         blank=True
     )
