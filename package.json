@@ -40,6 +40,7 @@
     "react-native-dotenv": "^2.5.3",
     "react-native-elements": "^3.3.1",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-image-crop-picker": "0.36.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-onesignal": "^4.0.3",

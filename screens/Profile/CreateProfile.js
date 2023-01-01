@@ -1,11 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useContext, useEffect, useState } from "react"
-import {
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  TouchableOpacity
-} from "react-native"
+import React, { useEffect, useState } from "react"
+import { ActivityIndicator, Image, TouchableOpacity } from "react-native"
 import { View, StyleSheet, Text } from "react-native"
 import { heightPercentageToDP as hp } from "react-native-responsive-screen"
 import userIcon from "../../assets/svg/Profile.svg"
@@ -17,9 +12,9 @@ import { updateProfile } from "../../api/auth"
 import { SvgXml } from "react-native-svg"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DatePicker from "react-native-date-picker"
-import moment from "moment/moment"
-import AppContext from "../../store/Context"
+import moment from "moment"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 
 function CreateProfile({ navigation }) {
   // const { _getProfile } = useContext(AppContext)
@@ -40,7 +35,8 @@ function CreateProfile({ navigation }) {
     open1: false,
     selectedTime: "",
     photo: null,
-    time: new Date()
+    time: new Date(),
+    locationText: ""
   })
   const {
     name,
@@ -59,7 +55,8 @@ function CreateProfile({ navigation }) {
     selectedTime,
     open1,
     time,
-    photo
+    photo,
+    locationText
   } = state
 
   const handleChange = (key, value) => {
@@ -130,11 +127,20 @@ function CreateProfile({ navigation }) {
       formData.append("kitch.about_us", about_us)
       formData.append("kitch.phone", phone)
       formData.append("kitch.photo", photo)
+      formData.append(
+        "kitch.availability",
+        moment.utc(selectedDate + " " + selectedTime).format("")
+      )
       formData.append("kitch.restaurant_name", restaurant_name)
-      formData.append("kitch.location", location)
+      formData.append(
+        "kitch.location",
+        JSON.stringify({
+          type: "Point",
+          coordinates: location
+        })
+      )
       const res = await updateProfile(formData, userData?.id, token)
       handleChange("loading", false)
-      console.warn("res?.data", res?.data)
       await AsyncStorage.setItem("user", JSON.stringify(res?.data))
       navigation.navigate("Drawers")
     } catch (error) {
@@ -149,9 +155,25 @@ function CreateProfile({ navigation }) {
     }
   }
 
+  const handleSearch = (data, details) => {
+    if (details?.geometry?.location) {
+      setState(pre => ({
+        ...pre,
+        location: [
+          details.geometry.location.lat,
+          details.geometry.location.lng
+        ],
+        locationText: data.description
+      }))
+    }
+  }
+
+  console.warn("moment.utc(date", location)
+
   return (
     <KeyboardAwareScrollView
       style={styles.container}
+      keyboardShouldPersistTaps={"handled"}
       contentContainerStyle={{ alignItems: "center" }}
     >
       <View style={styles.body}>
@@ -215,7 +237,7 @@ function CreateProfile({ navigation }) {
             />
           </View>
           <View style={styles.textInputContainer}>
-            <AppInput
+            {/* <AppInput
               inputLabel={"Location"}
               fullBorder
               borderRadius={8}
@@ -225,7 +247,63 @@ function CreateProfile({ navigation }) {
               name={"location"}
               value={location}
               onChange={handleChange}
-            />
+            /> */}
+            <View style={[styles.searchView, { width: "100%" }]}>
+              <GooglePlacesAutocomplete
+                placeholder="Location"
+                fetchDetails={true}
+                onPress={(data, details) => {
+                  // 'details' is provided when fetchDetails = true
+                  console.log(data, details)
+                  handleSearch(data, details)
+                }}
+                textInputProps={{
+                  value: locationText,
+                  onChangeText: text =>
+                    setState(pre => ({ ...pre, locationText: text }))
+                }}
+                styles={{
+                  // container: styles.textInput,
+                  textInput: {
+                    backgroundColor: COLORS.backgroud,
+                    borderWidth: 1,
+                    borderColor: COLORS.borderColor1,
+                    borderRadius: 8,
+                    width: "100%",
+                    paddingTop: 8,
+                    color: COLORS.grey,
+                    fontSize: hp(1.6),
+                    height: hp(6),
+                    fontFamily: FONT1REGULAR
+                  },
+                  poweredContainer: { backgroundColor: COLORS.lightergrey },
+                  row: { backgroundColor: COLORS.lightergrey }
+                }}
+                query={{
+                  key: "AIzaSyA8qkmVxCJuE2_LSU14ogM1vjnoEsRi_Iw",
+                  language: "en"
+                }}
+                GooglePlacesDetailsQuery={{
+                  fields: "geometry"
+                }}
+                filterReverseGeocodingByTypes={[
+                  "locality",
+                  "administrative_area_level_3"
+                ]}
+                listViewDisplayed={false}
+                renderRow={data => (
+                  <View style={{ width: "100%" }}>
+                    <Text style={{ color: COLORS.secondary }}>
+                      {data.description}
+                    </Text>
+                  </View>
+                )}
+                debounce={200}
+                currentLocation={false}
+                currentLocationLabel="Current location"
+                nearbyPlacesAPI="GooglePlacesSearch"
+              />
+            </View>
           </View>
           <Text style={styles.label}>Set Date & time availabilty</Text>
           <View
@@ -256,7 +334,7 @@ function CreateProfile({ navigation }) {
               modal
               open={open1}
               mode="time"
-              maximumDate={new Date()}
+              // minimumDate={new Date()}
               date={time}
               onConfirm={date => {
                 handleChange("open1", false)
@@ -271,10 +349,11 @@ function CreateProfile({ navigation }) {
               modal
               open={open}
               mode="date"
-              maximumDate={new Date()}
+              minimumDate={new Date()}
               date={date}
               onConfirm={date => {
                 handleChange("open", false)
+                handleChange("open1", false)
                 handleChange("date", date)
                 handleChange("selectedDate", moment(date).format("MM/DD/YYYY"))
               }}
