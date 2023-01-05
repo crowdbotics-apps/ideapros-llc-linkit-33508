@@ -248,6 +248,7 @@ function CreateProfile({ navigation }) {
               value={location}
               onChange={handleChange}
             /> */}
+            <Text style={styles.label}>{"Location"}</Text>
             <View style={[styles.searchView, { width: "100%" }]}>
               <GooglePlacesAutocomplete
                 placeholder="Location"
@@ -259,6 +260,7 @@ function CreateProfile({ navigation }) {
                 }}
                 textInputProps={{
                   value: locationText,
+                  placeholderTextColor: COLORS.grey,
                   onChangeText: text =>
                     setState(pre => ({ ...pre, locationText: text }))
                 }}
@@ -271,7 +273,7 @@ function CreateProfile({ navigation }) {
                     borderRadius: 8,
                     width: "100%",
                     paddingTop: 8,
-                    color: COLORS.grey,
+                    color: COLORS.inputText,
                     fontSize: hp(1.6),
                     height: hp(6),
                     fontFamily: FONT1REGULAR
@@ -305,7 +307,9 @@ function CreateProfile({ navigation }) {
               />
             </View>
           </View>
-          <Text style={styles.label}>Set Date & time availabilty</Text>
+          <Text style={[styles.label, { marginVertical: 15 }]}>
+            Set Date & time availabilty
+          </Text>
           <View
             style={{
               flexDirection: "row",
@@ -362,7 +366,7 @@ function CreateProfile({ navigation }) {
               }}
             />
           </View>
-          <Text style={styles.label}>Available For</Text>
+          <Text style={[styles.label, { marginTop: 10 }]}>Available For</Text>
           <View
             style={{
               flexDirection: "row",
@@ -447,6 +451,8 @@ function CreateProfile({ navigation }) {
               borderRadius={8}
               borderColor={COLORS.borderColor1}
               placeholder={"Phone"}
+              keyboardType="phone-pad"
+              returnKeyType={"done"}
               name={"phone"}
               value={phone}
               onChange={handleChange}
