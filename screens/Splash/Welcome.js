@@ -11,7 +11,7 @@ function Welcome({ navigation }) {
   const [env, setEnv] = useState("")
   const handleSubmit = async () => {
     await AsyncStorage.setItem("env", env)
-    navigation.navigate("GettingStarted")
+    navigation.navigate("LoginScreen")
   }
   return (
     <ImageBackground source={BG} style={styles.container}>

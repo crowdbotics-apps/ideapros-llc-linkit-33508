@@ -99,7 +99,7 @@ export default function AppInput({
                 value={value}
                 multiline={multiline}
                 numberOfLines={multiline ? 4 : 1}
-                editable={disabled ? false : true}
+                // editable={disabled ? false : true}
                 maxLength={maxLength || null}
                 keyboardType={keyboardType || "default"}
                 onChangeText={text => onChange(name, text)}
@@ -115,7 +115,7 @@ export default function AppInput({
               />
             )}
           </View>
-          {postfix && <View style={styles.postfix}>{postfix}</View>}
+          {/* {postfix && <View style={styles.postfix}>{postfix}</View>} */}
         </View>
       </View>
       {open &&
@@ -162,12 +162,13 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   left: {
-    width: "80%",
+    width: "100%",
     flexDirection: "row"
   },
   textInput: {
     color: COLORS.inputText,
     width: "100%",
+    textAlign: "left",
     fontFamily: FONT1REGULAR,
     fontSize: hp(1.6)
   },
@@ -191,5 +192,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 8
+  },
+  postfix:{
+    // width:"10%"
   }
 })

@@ -27,6 +27,7 @@ function CreateProfile({ navigation }) {
     phone: "",
     uploading: false,
     pickup: false,
+    dropoff: false,
     loading: false,
     open: false,
     date: new Date(),
@@ -56,7 +57,8 @@ function CreateProfile({ navigation }) {
     open1,
     time,
     photo,
-    locationText
+    locationText,
+    dropoff
   } = state
 
   const handleChange = (key, value) => {
@@ -89,7 +91,7 @@ function CreateProfile({ navigation }) {
       .then(async response => {
         if (!response.path) {
           handleChange("uploading", false)
-          alert("Something went wrong")
+          // alert("Something went wrong")
         } else {
           const uri = response.path
           const uploadUri =
@@ -108,7 +110,7 @@ function CreateProfile({ navigation }) {
         }
       })
       .catch(err => {
-        alert("Something went wrong")
+        // alert("Something went wrong")
         handleChange("uploading", false)
       })
   }
@@ -123,14 +125,14 @@ function CreateProfile({ navigation }) {
       formData.append("email", email)
       formData.append("name", name)
       formData.append("kitch.pickup", pickup)
-      formData.append("kitch.dropoff", !pickup)
-      formData.append("kitch.about_us", about_us)
+      formData.append("kitch.dropoff", dropoff)
+      about_us && formData.append("kitch.about_us", about_us)
       formData.append("kitch.phone", phone)
-      formData.append("kitch.photo", photo)
-      formData.append(
-        "kitch.availability",
-        moment.utc(selectedDate + " " + selectedTime).format("")
-      )
+      photo && formData.append("kitch.photo", photo)
+      // formData.append(
+      //   "kitch.availability",
+      //   moment.utc(selectedDate + " " + selectedTime).format("")
+      // )
       formData.append("kitch.restaurant_name", restaurant_name)
       formData.append(
         "kitch.location",
@@ -307,7 +309,7 @@ function CreateProfile({ navigation }) {
               />
             </View>
           </View>
-          <Text style={[styles.label, { marginVertical: 15 }]}>
+          {/* <Text style={[styles.label, { marginVertical: 15 }]}>
             Set Date & time availabilty
           </Text>
           <View
@@ -365,7 +367,7 @@ function CreateProfile({ navigation }) {
                 handleChange("open", false)
               }}
             />
-          </View>
+          </View> */}
           <Text style={[styles.label, { marginTop: 10 }]}>Available For</Text>
           <View
             style={{
@@ -400,10 +402,10 @@ function CreateProfile({ navigation }) {
               fillColor={COLORS.darkBlack}
               unfillColor={COLORS.white}
               disableBuiltInState
-              isChecked={!pickup}
+              isChecked={dropoff}
               text="Drop Off"
               innerIconStyle={{
-                backgroundColor: !pickup ? COLORS.primary : COLORS.white
+                backgroundColor: dropoff ? COLORS.primary : COLORS.white
               }}
               iconStyle={{ borderColor: COLORS.darkBlack, borderRadius: 20 }}
               textStyle={{
@@ -412,7 +414,7 @@ function CreateProfile({ navigation }) {
                 color: COLORS.darkBlack,
                 textDecorationLine: "none"
               }}
-              onPress={() => handleChange("pickup", !pickup)}
+              onPress={() => handleChange("dropoff", !dropoff)}
             />
           </View>
           <View style={styles.textInputContainer}>
@@ -460,13 +462,7 @@ function CreateProfile({ navigation }) {
           </View>
           <AppButton
             disabled={
-              !phone ||
-              !email ||
-              !about_us ||
-              !avatarSourceURL ||
-              !location ||
-              !restaurant_name ||
-              !name
+              !phone || !email || !location || !restaurant_name || !name
             }
             marginTop={30}
             loading={loading}

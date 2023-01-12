@@ -68,13 +68,13 @@ function Welcome({ navigation }) {
         <View style={styles.bottom}>
           <AppButton
             title={"Get Started"}
-            onPress={() => handleNavigate("LoginScreen", 1)}
+            onPress={() => handleNavigate("Welcome", 1)}
           />
           <AppButton
             title={"Skip"}
             backgroundColor={"transparent"}
             color={COLORS.grey}
-            onPress={() => handleNavigate("LoginScreen", 0)}
+            onPress={() => handleNavigate("Welcome", 0)}
           />
         </View>
       </ImageBackground>

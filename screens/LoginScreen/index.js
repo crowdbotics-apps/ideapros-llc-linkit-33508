@@ -92,11 +92,16 @@ function LoginScreen({ navigation, route }) {
       const res = await loginUser(payload)
       handleChange("loading", false)
       console.warn("loginUser", res?.data)
-      setUser(res?.data?.user)
-      await AsyncStorage.setItem("token", res?.data?.token)
-      await AsyncStorage.setItem("user", JSON.stringify(res?.data?.user))
-      navigation.navigate("AuthLoading")
-      Toast.show("Logged in Successfully!", Toast.SHORT)
+      const type = await AsyncStorage.getItem("env")
+      if (res?.data?.user?.type === type) {
+        setUser(res?.data?.user)
+        await AsyncStorage.setItem("token", res?.data?.token)
+        await AsyncStorage.setItem("user", JSON.stringify(res?.data?.user))
+        navigation.navigate("AuthLoading")
+        Toast.show("Logged in Successfully!", Toast.SHORT)
+      } else {
+        alert("You cannot login with " + res?.data?.user?.type + " user")
+      }
     } catch (error) {
       handleChange("loading", false)
       console.warn("err", error)

@@ -25,7 +25,7 @@ function AuthLoading({ navigation }) {
       setUser(userData)
       navigation.navigate(userData?.kitch?.photo ? "Drawers" : "CreateProfile")
     } else {
-      navigation.navigate("Welcome")
+      navigation.navigate("GettingStarted")
     }
   }
 
