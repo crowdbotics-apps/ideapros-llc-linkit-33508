@@ -38,7 +38,7 @@ export const forgotpasswordCode = payload => {
 }
 
 export const forgotpassword = payload => {
-  return API.post('api/v1/users/otp/', payload)
+  return API.post('api/v1/users/password_reset_link/', payload)
 }
 
 export const getProfile = (id, token) => {
